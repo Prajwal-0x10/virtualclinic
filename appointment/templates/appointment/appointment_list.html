@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+
+<style>
+    .container{
+        margin-top:100px;
+        font-size: 14px;
+    }
+    .headoftable{
+        padding:10px;
+        background-color: #16a085;
+        color:white;
+       
+    }
+</style>
+
+<div class="container">
+    <h2>Your Appointments</h2>
+    <div>
+        {% if user.is_patient %}
+        <a class="btn btn-primary" href="{% url 'appointment:book_an_appointment' %}" role="button">Take Appointment</a>
+        <table class="table table-striped mt-5">
+            <thead class="mt-5 headoftable">
+                <th>Date</th>
+                <th>Book Time</th>
+                <th>Appointment Time</th>
+                <th>Consulting Doctor</th>
+                <th>Patient</th>
+                <th>Actions</th>
+            </thead>
+            {% for obj in apps %}
+            <tr>
+                <td>{{obj.book_date|date:'d-m-y' }}</td>
+                <td>{{obj.book_time|time:'g:i a'  }}</td>
+                <td>{{obj.appointment_time|time:'g:i a'  }}</td>
+                <td>{{ obj.doctor }}</td>
+                <td>{{ obj.patient }}</td>
+                <td><a class="btn btn-primary" href="{% url 'appointment:delete_appointment' obj.id %}" role="button">Cancle Appointment</a></td>
+                
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        {% if user.is_doctor %}
+        <table class="table table-striped">
+            <thead>
+                <th>Book Date</th>
+                <th>Book Time</th>
+                <th>Appointment Time</th>
+                <th>Symptom</th>
+                <th>Patient</th>
+                <th>Medical History</th>
+                <th>Prescription</th>
+                
+               
+                
+            </thead>
+            {% for obj in apps %}
+            <tr>
+                <td>{{obj.book_date|date:'d-m-y' }}</td>
+                <td>{{obj.book_time|time:'g:i a'  }}</td>
+                <td>{{obj.appointment_time|time:'g:i a'  }}</td>
+                <td>{{ obj.symptom }}</td>
+                <td>{{ obj.patient }}</td>
+                <td>
+                    <form action="{% url 'appointment:medical_history' %}">
+                    <input type="hidden" value="{{obj.id}}" name="appointment">
+                    <button class="btn btn-primary">Medical History</button>
+
+                    </form>
+                   
+                </td>
+        
+        {% if   obj.prescription_added %}
+                    {% for ed in obj.prescription_set.all %}
+                    <td>
+                    <a class="btn btn-primary" href="{% url 'appointment:update_prescription' ed.id %}" role="button">View Prescription</a>  <a class="btn btn-primary" href="{% url 'appointment:delete_appointment' obj.id %}" role="button">Delete</a>
+                    </td> 
+                    {% endfor %} 
+        {% else %}
+                    <td><a class="btn btn-primary" href="{% url 'appointment:prescription' obj.id %}" role="button">Add Prescription</a>  <a class="btn btn-primary" href="{% url 'appointment:delete_appointment' obj.id %}" role="button">Delete</a></td>
+                   
+        {% endif %}
+         
+            </tr>
+            {% endfor %}
+        </table>
+        
+        {% endif %}
+    </div>  
+</div>
+{% endblock %}

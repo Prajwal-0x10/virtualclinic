@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block content %}
+  
+<!-- home section starts  -->
+
+<section class="home" id="home">
+
+  <div class="image">
+      <img src="{% static 'frontend/image/home-img.svg' %}" alt="">
+  </div>
+
+  <div class="content">
+      <h3>stay safe, stay healthy</h3>
+     
+  </div>
+
+</section>
+
+<!-- home section ends -->
+
+
+
+
+
+
+
+<!-- icons section starts  -->
+
+<section class="icons-container">
+
+  <div class="icons">
+      <i class="fas fa-user-md"></i>
+      <h3>140+</h3>
+      <p>doctors at work</p>
+  </div>
+
+  <div class="icons">
+      <i class="fas fa-users"></i>
+      <h3>1040+</h3>
+      <p>satisfied patients</p>
+  </div>
+
+  <div class="icons">
+      <i class="fas fa-procedures"></i>
+      <h3>500+</h3>
+      <p>bed facility</p>
+  </div>
+
+  <div class="icons">
+      <i class="fas fa-hospital"></i>
+      <h3>80+</h3>
+      <p>available hospitals</p>
+  </div>
+
+</section>
+
+<!-- icons section ends -->
+
+<!-- about section starts  -->
+
+<section class="about" id="about">
+
+  <h1 class="heading"> <span>about</span> us </h1>
+
+  <div class="row">
+
+      <div class="image">
+          <img src="{% static 'frontend/image/about-img.svg' %}" alt="">
+      </div>
+
+      <div class="content">
+          <h3>we take care of your healthy life</h3>
+          <p>The demand for top-notch healthcare facilities has been on the rise. As the generation of baby boomers continues to age, they are more likely to suffer from chronic diseases. In addition, unhealthy lifestyle choices and eating habits are further increasing the number of patients suffering from chronic ailments.
+
+
+            Patients have also become extremely cautious of fraudulent healthcare schemes. Thus, it has become crucial to build great hospitals that offer high-quality healthcare services at affordable prices.</p>
+         
+      </div>
+
+  </div>
+
+</section>
+
+<!-- about section ends -->
+
+<!-- booking section starts   -->
+
+<section class="book" id="book">
+
+  <h1 class="heading"> <span>Contact</span> us </h1>    
+
+  <div class="row">
+
+      <div class="image">
+          <div>
+              <h1>get in touch</h1>
+
+              <h4><a href="mailto:well_fair@gmail.com">EMAIL - well_fair@gmail.com</a></h4>
+              <h4><a href="tel:+91 1234567890">+91 1234567890</a></h4>
+              <h4>Address : Mumbai </h4>
+             
+
+          </div>
+      </div>
+
+      <form action="">
+          <h3>send email</h3>
+          <input type="text" placeholder="your name" class="box">
+          <input type="number" placeholder="your subject" class="box">
+          <input type="email" placeholder="your email" class="box">
+          <input type="textarea" placeholder="your meesage" class="box">
+          <input type="submit" value="Send meesage now" class="btn">
+      </form>
+
+  </div>
+
+</section>
+
+<!-- booking section ends -->
+{% endblock %}

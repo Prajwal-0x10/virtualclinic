@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+
+
+<style>
+    .chooseRegister{
+      margin-top:100px;
+      padding:3rem;
+      font-size:14px;
+    }
+  </style>
+  
+  <div class="chooseRegister"> 
+
+  
+    
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2 justify-content-center">
+     
+        {% for ed in lists %}
+        <div class="col">
+        <div class="card">
+          <div class="card-body shadow">
+            <div>
+              <h1>Patient: {{ ed.patient}}</h1>
+            </div>
+            <p class="card-text">Syptoms: {{ed.symptoms}}</p>
+            <p class="card-text">Prescriptions : {{ed.prescription}}</p>
+            <p class="card-text">Date : {{ed.date|date:'d-m-y'}}</p>
+            <p class="card-text">Time : {{ed.date|time:'g:i a'}}</p>	
+            <a href="{% url 'appointment:update_prescription' ed.id %}" class="btn btn-light">Edit</a>
+          </div>
+        </div>
+      </div>
+     
+      {% endfor %}
+    </div>
+  
+  </div>
+{% endblock %}

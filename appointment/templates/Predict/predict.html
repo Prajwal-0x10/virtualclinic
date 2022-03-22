@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+
+{% load static %}
+
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+     
+    <title>Predict Page</title>
+    <style>
+        body{
+            background-image:url("{%static 'bg_img.jpg' %}");
+            background-repeat:no-repeat;
+            background-attachment:fixed;
+            background-size:cover;
+        }
+        
+        form {
+            margin:5% auto 0 auto;
+            padding:30px;
+            width:400px;
+            height:auto;
+            overflow:hidden;
+            background:white;
+            border-radius:10px;
+        }
+
+        form label {
+            font-size:14px;
+            color:darkgray;
+            cursor:pointer;
+        }
+
+        form input {
+            margin:15px 0;
+            padding:15px 10px;
+            width:100%;
+            outline:none;
+            border:1px solid #bbb;
+            border-radius:20px;
+            display:inline-block;
+            box-sizing:border-box;
+            transition:0.2s ease all;
+            font-size:14px;
+        }
+
+        form label,
+        form input {
+            float:left;
+            clear:both;
+        }
+
+        input[type=submit] {
+            padding:15px 50px;
+            width:auto;
+            background:#1abc9c;
+            border:none;
+            color:white;
+            cursor:pointer;
+            display:inline-block;
+            align-items:center;
+            clear:right;
+            transition:0.2s ease all;
+        }
+
+        input[type=submit]:hover {
+            opacity:0.8;
+        }
+
+        input[type="submit"]:active {
+            opacity:0.4;
+        }
+        
+        h3{
+            color:#ffffff;
+            font-size:30px;
+            font-weight:bold;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+    <h3>Get to know about the disease you're sufferring from!</h3>
+   <div align = 'center' class = "main">
+         <form action="result">
+           <label align = "left">Symptom 1</label>
+            <input type="text", name = "s1">
+            <br><br>
+
+            <label align = "left">Symptom 2</label>
+            <input type="text", name = "s2">
+            <br><br>
+
+            <label align = "left">Symptom 3</label>
+            <input type="text", name = "s3">
+            <br><br>
+
+            <label align = "left">Symptom 4</label>
+            <input type="text", name = "s4">
+            <br><br>
+            
+
+            <input type="submit" value = "Predict">
+        </form>
+        <h3>Predicted Disease: {{result2}}</h3>
+
+
+    </div>
+ 
+</body>
+
+</html>-->
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body{
+            background-image:url("{%static 'bg_img.jpg' %}");
+            background-repeat:no-repeat;
+            background-attachment:fixed;
+            background-size:cover;
+        }
+        
+        form {
+            margin:5% auto 0 auto;
+            padding:30px;
+            width:400px;
+            height:auto;
+            overflow:hidden;
+            background:white;
+            border-radius:10px;
+        }
+
+        form label {
+            font-size:14px;
+            color:darkgray;
+            cursor:pointer;
+        }
+
+        form input {
+            margin:15px 0;
+            padding:15px 10px;
+            width:100%;
+            outline:none;
+            border:1px solid #bbb;
+            border-radius:20px;
+            display:inline-block;
+            box-sizing:border-box;
+            transition:0.2s ease all;
+            font-size:14px;
+        }
+
+        form label,
+        form input {
+            float:left;
+            clear:both;
+        }
+
+        input[type=submit] {
+            padding:15px 50px;
+            width:auto;
+            background:#1abc9c;
+            border:none;
+            color:white;
+            cursor:pointer;
+            display:inline-block;
+            align-items:center;
+            clear:right;
+            transition:0.2s ease all;
+        }
+
+        input[type=submit]:hover {
+            opacity:0.8;
+        }
+
+        input[type="submit"]:active {
+            opacity:0.4;
+        }
+        
+        h3{
+            color:#ffffff;
+            font-size:30px;
+            font-weight:bold;
+            text-align:center;
+        }
+        
+    </style>
+
+    <!-- Bootstrap Links -->
+   
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+   
+
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <!--    &lt;!&ndash; for handle Bar &ndash;&gt;-->
+    <script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
+
+    <!--Semantics Ui CDN  -->
+    <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>-->
+
+    <!-- select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+    <!--Semantics JSS -->
+</head>
+<body>
+    
+        <div style=" padding:10px ; font-size:15px" class="container mt-5">
+            <div style="margin-top: 100px;">
+                <div class="row">
+                    <h1>Predict Your Disease</h1>
+
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="col-md-8">
+                            <input  class="prompt form-control" id="box" type="text" placeholder="Search Symptoms...">
+                        </div>
+                        <div class="col-md-4">
+                            <a  onclick="btn_handler()" class="btn btn-primary" type="submit" value = "Predict">Predict</a>
+                        </div>
+                </form>
+
+                <div id="get_div">
+
+                </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+<script>
+    var content = ['itching','skin_rash','nodal_skin_eruptions',	'continuous_sneezing','shivering',
+        	'chills','joint_pain',	'stomach_pain'	,'acidity',	'ulcers_on_tongue'	,'muscle_wasting',	'vomiting'	,
+            'burning_micturition',	'spotting_ urination'	,'fatigue',	'weight_gain'	,'anxiety',	'cold_hands_and_feets',	
+            'mood_swings',	'weight_loss',	'restlessness'	,'lethargy',	'patches_in_throat',	'irregular_sugar_level',	'cough',	
+            'high_fever',	'sunken_eyes',	'breathlessness',	'sweating',	'dehydration',	'indigestion',	'headache',	
+            'yellowish_skin',	'dark_urine',	'nausea',	'loss_of_appetite',	'pain_behind_the_eyes',	'back_pain',	'constipation',	
+            'abdominal_pain',	'diarrhoea',	'mild_fever',	'yellow_urine',	'yellowing_of_eyes',	'acute_liver_failure',	'fluid_overload',	
+            'swelling_of_stomach',	'swelled_lymph_nodes',	'malaise',	'blurred_and_distorted_vision',	'phlegm',
+            'throat_irritation',	'redness_of_eyes',	'sinus_pressure',	'runny_nose',	'congestion',	'chest_pain',
+             	'weakness_in_limbs',	'fast_heart_rate',	'pain_during_bowel_movements',	'pain_in_anal_region',	'bloody_stool',
+                    	'irritation_in_anus',	'neck_pain',	'dizziness'	,'cramps',	'bruising',	'obesity',	'swollen_legs',	
+                        'swollen_blood_vessels',	'puffy_face_and_eyes',	'enlarged_thyroid',	'brittle_nails',	'swollen_extremeties',
+               	'excessive_hunger',	'extra_marital_contacts',	'drying_and_tingling_lips',	'slurred_speech',	'knee_pain',
+           'hip_joint_pain',	'muscle_weakness',	'stiff_neck',	'swelling_joints',	'movement_stiffness',
+           	'spinning_movements',	'loss_of_balance',	'unsteadiness',	'weakness_of_one_body_side',	
+                       'loss_of_smell',	'bladder_discomfort',	'foul_smell_of urine',	'continuous_feel_of_urine',	'passage_of_gases',	'internal_itching',	
+             'toxic_look_(typhos)',	'depression',	'irritability'	,'muscle_pain',	'altered_sensorium',	'red_spots_over_body',	'belly_pain',	'abnormal_menstruation',	
+            'dischromic _patches'	,'watering_from_eyes',	'increased_appetite',	'polyuria',	'family_history',	'mucoid_sputum',	'rusty_sputum',
+                     	'lack_of_concentration'	,'visual_disturbances',	'receiving_blood_transfusion',	'receiving_unsterile_injections',	
+                                    'coma',	'stomach_bleeding',	'distention_of_abdomen'	,'history_of_alcohol_consumption'	,'fluid_overload',
+                                        	'blood_in_sputum',	'prominent_veins_on_calf',	'palpitations'	,'painful_walking'	,'pus_filled_pimples',	
+                                       'blackheads',	'scurring'	,'skin_peeling',	'silver_like_dusting',	'small_dents_in_nails'	,'inflammatory_nails',
+                            	'blister',	'red_sore_around_nose',	'yellow_crust_ooze'];
+
+
+     $(".prompt").select2({
+         data:content,
+         // minimumInputLength: 2,
+         width: '100%',
+         multiple:true,
+         placeholder:"Enter Symptom Name",
+         // templateResult:formatState
+
+     });
+
+
+
+    function btn_handler() {
+        var symptoms = $('.prompt').select2('data','id');
+        if (symptoms.length>=4)
+        {console.log(symptoms)
+        symp={}
+        symp['csrfmiddlewaretoken']=$("input[name='csrfmiddlewaretoken']").val()
+        symptoms.forEach(el => {
+                       
+                           symp[el.text]=el.id;
+                       
+
+                    })
+        console.log(symp);
+        }
+
+        else{
+            alert("Please Select 4 or more symptoms to get result more accurately")
+        }
+    
+                   
+
+  
+        $.ajax({
+        type: 'POST',
+        url: '{% url "appointment:result" %}',
+        data: symp,
+        success: function (data) {
+                    console.log(data);
+                    get_div= document.getElementById('get_div');
+                    if(data.status == "success"){
+                        
+                        get_div.innerHTML = `
+                        <h1 class="text-success">You Might have - ${data.prediction}</h1> 
+                        <h1 class="text-success">Please consult - ${data.consult}</h1>  
+                        <h6>Please concern respective specialist</h6>
+                        `
+                    }
+                    else{
+                        alert(data.status);
+                    }
+                }
+        });
+        
+    
+    }
+
+</script>
+
+</html>
+
+
+{% endblock %}

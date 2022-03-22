@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+
+
+{% block content %}
+
+<style>
+    .container {
+      margin-top: 100px;
+    }
+    #id_username,#id_password1,#id_password2,#id_address,#id_gender,#id_age,#id_blood_group {
+      width: 100%;
+      margin:.7rem 0;
+      border-radius: .5rem;
+      border:var(--border);
+      font-size: 1.6rem;
+      color: var(--black);
+      text-transform: none;
+      padding: 1rem;
+  }
+  label {
+      display: inline-block;
+      font-size: 14px;
+  }
+  </style>  
+  
+
+
+
+
+
+
+
+<div class="container">
+    <h2>Hello, {{ user.username }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Update" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}

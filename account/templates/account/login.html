@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+ <style>
+  #book{
+      font-size:18px;
+      margin-top:100px;
+      
+  }
+  
+  </style>
+
+<section class="book" id="book">
+
+ 
+
+  <div class="row">
+
+   
+
+    <form method="POST" action="{% url 'account:do_login' %}">
+    
+      {% csrf_token %}
+          <h3>Login</h3>
+          <input type="text" name="username" placeholder="your username" class="box">
+          <input type="password" name="password" placeholder="your password" class="box">
+          <input type="submit" value="Login now" class="btn">
+      </form>
+
+  </div>
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+
+{% block content %}
+
+<style>
+  .container {
+    margin-top: 100px;;
+  }
+  #id_username,#id_password1,#id_password2,#id_department,#id_gender,#id_mobile,#start_time {
+    width: 100%;
+    margin:.7rem 0;
+    border-radius: .5rem;
+    border:var(--border);
+    font-size: 1.6rem;
+    color: var(--black);
+    text-transform: none;
+    padding: 1rem;
+}
+label {
+    display: inline-block;
+    font-size: 14px;
+}
+</style>  
+
+
+<div class="container">
+  <div class="row justify-content-center">
+
+
+
+  <div class="col-md-5">
+    <h1>Sign Up</h1>
+
+    <form method="POST">
+      
+    {{form.errors}}
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <label class="">Time OF Start Shift</label>
+        <input type="time" name="start_time" id="start_time" class="form-control" placeholder="">
+        <label class="">Time OF End Shift</label>
+        <input type="time" name="end_time" id="start_time" class="form-control" placeholder="">
+        
+        <input type="submit" value="Sign Up"  class="btn btn-outline-success">
+    </form>
+
+</div>
+</div>
+
+</div>
+{% endblock %}

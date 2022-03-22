@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+
+{% block content %}
+<style>
+	#book{
+		margin-top:100px;
+        max-width:800px;
+	}
+
+    #row{
+        max-width:500px;
+    }
+    .boxx{
+    width: 100%;
+    margin:.7rem 0;
+    border-radius: .5rem;
+    border:var(--border);
+    font-size: 1.6rem;
+    color: var(--black);
+    text-transform: none;
+    padding: 3rem;
+    }
+</style>
+
+
+
+
+
+<section class="book" id="book">
+    <h1>Hello ,{{request.user}}</h1>
+ 
+
+    <div class="row">
+  
+     
+  
+      
+        {% if messages %}
+        {% for msg in messages %}
+            {{msg}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% endfor %}
+        {% else %}
+        {% endif %}
+        {% csrf_token %}
+
+            <h3>Prescription</h3>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+             <label class="box">Patient Name</label>
+            <input type="text" name="patient" value="{{apts.patient}}" class="box" readonly>
+            <label class="box">Symptoms</label>
+            <input type="text" name="symptom" value="{{apts.symptom}}" class="box">
+            <label class="box">Prescription</label>
+            <input type="text" name="prescription" placeholder="your Prescription" class="boxx">
+            <input type="submit" value="submit" class="btn">
+        </form>
+  
+    </div>
+  
+  </section>
+  
+{% endblock %}

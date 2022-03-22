@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block content %}
+
+
+<style>
+  .chooseRegister{
+    margin-top:100px;
+    padding:3rem;
+    font-size:14px;
+  }
+</style>
+
+<div class="chooseRegister"> 
+
+<p class="lead mt-5"></p>
+
+  
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2 justify-content-center">
+    <div class="col">
+      <div class="card bg-warning">
+        <div class="card-body shadow">
+          <div>
+            <h1>I'm a Pateint</h1>
+          </div>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>	
+          <a href="{% url 'account:pateint_register' %}" class="btn btn-light">Register</a>
+        </div>
+      </div>
+    </div>
+   
+    <div class="col ">
+      <div class="card bg-success">
+        <div class="card-body shadow">
+          <div>
+            <h1>I'am a Doctor</h1>
+          </div>
+          <p class="card-text text-white">With supporting text below as a natural lead-in to additional content.</p>	
+          <a href="{% url 'account:doctor_register' %}" class="btn btn-light">Register</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %} 
