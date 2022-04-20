@@ -283,7 +283,7 @@
 
     function btn_handler() {
         var symptoms = $('.prompt').select2('data','id');
-        if (symptoms.length>=4)
+        if (symptoms.length>=2)
         {console.log(symptoms)
         symp={}
         symp['csrfmiddlewaretoken']=$("input[name='csrfmiddlewaretoken']").val()
@@ -297,7 +297,7 @@
         }
 
         else{
-            alert("Please Select 4 or more symptoms to get result more accurately")
+            alert("Please Select 2 or more symptoms to get result more accurately")
         }
     
                    

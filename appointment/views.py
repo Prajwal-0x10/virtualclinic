@@ -16,6 +16,7 @@ from sklearn import tree
 import numpy as np
 import pandas as pd
 from django.http import JsonResponse
+from django.http import HttpResponse
 
 
 def appointments_list(request):
@@ -30,7 +31,31 @@ def appointments_list(request):
     return render(request, 'appointment/appointment_list.html',context)
 
 
+def session_doctor(request):
+    request.session['ment'] = ''
+    department=request.GET.get("department")
+    print(department)
+    request.session['ment'] = department
+    return HttpResponse("<div id='error' class='success text-success'></div>")
 
+def get_doctors(request):
+    doc=request.GET.get("selected_doctor")
+    if doc == "Yes": 
+        dpart=request.session.get('ment')
+        print("doc depart",dpart)
+        get_doctors=DoctorProfile.objects.filter(department=dpart)
+        context={'doctors': get_doctors,
+                'status':"YES"
+        }
+        return render(request, 'appointment/partials/perm.html',context )
+    else:
+        context={
+                'status':"NO"
+        }
+        return render(request, 'appointment/partials/perm.html',context )
+
+
+    
 #############======================================================#################
 #############============ Function for book an appointmen =========#################
 #############======================================================#################
@@ -47,13 +72,18 @@ def book_an_appointment(request):
             department=form.cleaned_data['department']
             symptoms=request.POST.get('symptoms')
             book_date=request.POST.get('book_date')
-            
+            selected_doctor=request.POST.get('selected_doctor')
+            selected_doc = request.POST.get('selected_doc')
+            print(selected_doc)
 
             if book_date=='':
                 messages.success(request,'Please Choose a date')
                 return redirect('appointment:book_an_appointment')
-                
-            get_doctors=DoctorProfile.objects.filter(department=department)
+
+            if selected_doctor == "Yes" and selected_doc != '':
+               get_doctors=DoctorProfile.objects.filter(id=selected_doc)
+            else:    
+                get_doctors=DoctorProfile.objects.filter(department=department)
             
             # if doctor is available
             if get_doctors:
@@ -72,14 +102,18 @@ def book_an_appointment(request):
                     if book_date == str(get_today):
                         print("today date")
                         check_book_date_apt=Appointment.objects.filter(doctor=doctor,book_date=book_date).last()
+                        
                         if check_book_date_apt:
 
                             get_last_time=check_book_date_apt.appointment_time
                             
-                            
+                            if str(get_last_time.replace(hour=(get_last_time.hour+1) % 24))  >= str(get_shift_end_time):
+                                    continue
                             if str(get_last_time) < current_time > str(get_shift_end_time):
+                                
                                 extTime=datetime.datetime.now() + datetime.timedelta(minutes = 60)
                                 if str(extTime) > get_shift_end_time :
+                                    messages.success(request,'doctor is not available')
                                     print("doctor is not available")
                                 else:
                                     appoint=Appointment(
@@ -110,7 +144,7 @@ def book_an_appointment(request):
                                         department=department,
                                         book_date=book_date)
                                 appoint.save()
-                                messages.success(request, f'Your appointment is booked at  {extTime} with {doctor}')
+                                messages.success(request,f'Appointment booked sucessfully with {doctor} on {book_date} at {extTime}')
                                 break
 
                         else:
@@ -145,12 +179,13 @@ def book_an_appointment(request):
                                 break
                                 
 
-                    
+                    #till
                     else:
                         if get_latest:
                             get_last_time=get_latest.appointment_time
                             #get_last_time=get_last_time.replace(hour=(get_last_time.hour+1) % 24)
                             if str(get_last_time.replace(hour=(get_last_time.hour+1) % 24))  >= str(get_shift_end_time):
+                                messages.success(request,'doctor is not available')
                                 continue
                             else:
 
@@ -185,127 +220,27 @@ def book_an_appointment(request):
                             appoint.save()
                             messages.success(request, f"Yor Appointment booked sucessfully with {doctor} at {book_date} on {extTime}") 
                             break
-
-                    
-                         
+            
                             #
             # if doctor is not available
             else:
+                print("else condition") 
                 messages.success(request,'No Doctor Availble yet Try another time')
                         
             return redirect('appointment:book_an_appointment')      
-            # for doctor in get_doctors:
-            #     get_id=doctor.id
-            #     get_doctor=DoctorProfile.objects.get(id=get_id)
-            #     print("Doctor Instance IS",get_doctor)
-            #     start_time=get_doctor.shift_start_time
-            #     endtime=get_doctor.shift_end_time
-
-            #     print("Timing",start_time,endtime)
-
-            #     patient=PatientProfile.objects.get(user=request.user) 
-            #     if book_date:
-            #         if book_date < str(date.today()):
-            #             messages.error(request,'Please choose  right date')
-            #             context ={'form':DepartmentForm()}
-            #             return render(request, 'appointment/appointment_create.html',context)
-
-            #         else:
-            #             date_appointment=Appointment.objects.filter(book_date=book_date).filter(doctor=get_doctor)
-            #             print("date is this",date_appointment)
-                        
-
-            #             if date_appointment:
-            #                 last_appointment_id=Appointment.objects.filter(book_date=book_date).filter(doctor=get_doctor).last()
-            #                 last_appointment_time=last_appointment_id.appointment_time    
-                            
-            #                 update_time = last_appointment_time.replace(hour=(last_appointment_time.hour+1) % 24)
-
-            #                 if str(update_time) > str(endtime) :
-            #                     pass
-            #                     # context ={'form':DepartmentForm()}
-            #                     # messages.success(request,"No doctor available In this date please choose another date")
-            #                     # return render(request, 'appointment/appointment_create.html',context)
-            #                 #end from here
-            #                 else:
-  
-            #                     appoint=Appointment(
-            #                         book_time=current_time,
-            #                         appointment_time=update_time,
-            #                         symptom =symptoms,
-            #                         patient = patient,
-            #                         doctor = get_doctor,
-            #                         department=department,
-            #                         book_date=book_date,)
-
-            #                     appoint.save()
-                                
-
-            #                 messages.success(request,f"You have an appointment on date {book_date} at {update_time}")
-            #                 return redirect('appointment:book_an_appointment')
-            #                 pass
-            #             else:
-            #                 print("today date is",date.today())    
-            #                 print("book date is",book_date)    
-            #                 update_time = start_time.replace(hour=(start_time.hour+1) % 24)
-            #                 if str(date.today())==str(book_date):
-            #                     print("yes it was")
-            #                     if str(current_time) > str(update_time):
-            #                         current_time =  datetime.now()
-            #                         print(current_time)
-            #                         #datetime.strptime(current_time,'%H:%M:%S').strftime('%H:%M:%S')
-            #                         print(type(current_time))
-                                
-            #                         update_time = current_time.replace(hour=(current_time.hour+1) % 24)
-            #                         appointment=Appointment(
-            #                             book_time=current_time,
-            #                             appointment_time=update_time,
-            #                             symptom =symptoms,
-            #                             patient = patient,
-            #                             doctor = get_doctor,
-            #                             department=department,
-            #                             book_date=book_date,
-            #                                 )
-            #                         appointment.save()
-            #                         messages.success(request,f'You have an appointment now at {update_time}')
-            #                         return redirect('appointment:book_an_appointment') 
-            #                     else:
-            #                         appointment=Appointment(
-            #                             book_time=current_time,
-            #                             appointment_time=update_time,
-            #                             symptom =symptoms,
-            #                             patient = patient,
-            #                             doctor = get_doctor,
-            #                             department=department,
-            #                             book_date=book_date,
-            #                                 )
-            #                         appointment.save()
-
-
-
-            #             appoint=Appointment(
-            #                     book_time=current_time,
-            #                     appointment_time=update_time,
-            #                     symptom =symptoms,
-            #                     patient = patient,
-            #                     doctor = get_doctor,
-            #                     department=department,
-            #                     book_date=book_date,
-                                
-
-            #                 )
-            #             appoint.save()
-            #             messages.success(request,f"You have an appointment on date {book_date} at {update_time}")
-            #             return redirect('appointment:book_an_appointment')                              
-                
-               
-
-        
+                 
     return render(request, 'appointment/appointment_create.html',{'form':DepartmentForm()})
 
 
 #############============ End of Function to book an appointment ==========##########
-
+def selected_doctor(request , pk):
+    get_doctor=DoctorProfile.objects.filter(id=pk).first()
+    book_date = request.session.get('book_date')
+    get_shift_start_time=get_doctor.shift_start_time
+    get_shift_end_time=get_doctor.shift_end_time
+    print(get_shift_start_time,get_shift_end_time)
+    get_latest=Appointment.objects.filter(doctor=get_doctor,book_date=book_date).last()
+    return redirect('appointment:book_an_appointment')
 
 def prescription(request ,pk):
     get_appointment=Appointment.objects.filter(id=pk).first()
@@ -334,7 +269,7 @@ def prescription(request ,pk):
             doctor=get_doctor_instances,
             symptoms=symptoms,
             prescription=prescription,
-            date =datetime.now()
+            date =datetime.datetime.now()
 
         )
         pres.save()
@@ -528,86 +463,111 @@ def result(request):
     # Defining the Function
     # Input: string containing symptoms separated by commmas
     # Output: Generated predictions by models
-    def predictDisease(psymptoms):
+    def predictDisease(symptoms):
+            from sklearn.ensemble import StackingClassifier
+            if len(symptoms)>2:
+                
+                
+                # creating input data for the models
+                input_data = [0] * len(data_dict["symptom_index"])
+                for symptom in symptoms:
+                    index = data_dict["symptom_index"][symptom]
+                    input_data[index] = 1
+                
+                # reshaping the input data and converting it
+                # into suitable format for model predictions
+                input_data = np.array(input_data).reshape(1,-1)
+                
+                # generating individual outputs
+                #rf_prediction = data_dict["predictions_classes"][final_rf_model.predict(input_data)[0]]
+                #nb_prediction = data_dict["predictions_classes"][final_nb_model.predict(input_data)[0]]
+                #svm_prediction = data_dict["predictions_classes"][final_svm_model.predict(input_data)[0]]
+                
+
+                level1 = list()                                   
+                level1.append(('svm', SVC()))                      # model2  
+                level1.append(('bayes', GaussianNB()))             # model3  
+
+                meta_Learner =RandomForestClassifier(random_state=18)                # define meta learner model
+
+                stacked_model = StackingClassifier(estimators=level1, final_estimator=meta_Learner, cv=4)     #defining the StackingClassifier
+                    
+                # get the base models
+                models = dict()
+                models['svm'] = SVC()
+                models['bayes'] = GaussianNB()
+                models['stacking'] = stacked_model
+                
+                stacked_model.fit(X_train,y_train)
+                stacked_prediction = data_dict["predictions_classes"][stacked_model.predict(input_data)[0]]
+
+                # making final prediction by taking mode of all predictions
+                final_prediction = mode([stacked_prediction])[0][0]
+
+            
+            
         
-        if len(psymptoms)>=4:
-        #print(symptoms)
-        # creating input data for the models
-            input_data = [0] * len(data_dict["symptom_index"])
-            
-            for i in psymptoms:
-                index = data_dict["symptom_index"][i]
-                input_data[index] = 1
-            #print(input_data)
-            # reshaping the input data and converting it
-            # into suitable format for model predictions
-            input_data = np.array(input_data).reshape(1, -1)
 
-            # generating individual outputs
-            rf_prediction = data_dict["predictions_classes"][final_rf_model.predict(input_data)[0]]
-            nb_prediction = data_dict["predictions_classes"][final_nb_model.predict(input_data)[0]]
-            svm_prediction = data_dict["predictions_classes"][final_svm_model.predict(input_data)[0]]
 
-            # making final prediction by taking mode of all predictions
-            final_prediction = mode([rf_prediction, nb_prediction, svm_prediction])[0][0]
-            
-            Rheumatologist = [ ]
-       
-            Cardiologist = [ 'Heart attack','Bronchial Asthma','Hypertension ']
-            
-            ENT_specialist = ['(vertigo) Paroymsal  Positional Vertigo','Hypothyroidism' ]
 
-            Orthopedist = ['Osteoarthristis','Arthritis']
 
-            Neurologist = ['Varicose veins','Paralysis (brain hemorrhage)','Migraine','Cervical spondylosis']
-
-            Allergist_Immunologist = ['Allergy','Pneumonia',
-                'AIDS','Common Cold','Tuberculosis','Malaria','Dengue','Typhoid']
-
-            Urologist = [ 'Urinary tract infection',
-                'Dimorphic hemmorhoids(piles)']
-
-            Dermatologist = [  'Acne','Chicken pox','Fungal infection','Psoriasis','Impetigo']
-
-            Gastroenterologist = ['Peptic ulcer diseae', 'GERD','Chronic cholestasis','Drug Reaction','Gastroenteritis','Hepatitis E',
-                'Alcoholic hepatitis','Jaundice','hepatitis A',
-                'Hepatitis B', 'Hepatitis C', 'Hepatitis D','Diabetes ','Hypoglycemia']
-                
-            if final_prediction in Rheumatologist :
-                consultdoctor = "Rheumatologist"
-                
-            if final_prediction in Cardiologist :
-                consultdoctor = "Cardiologist"
-                
-
-            elif final_prediction in ENT_specialist :
-                consultdoctor = "ENT specialist"
-            
-            elif final_prediction in Orthopedist :
-                consultdoctor = "Orthopedist"
-            
-            elif final_prediction in Neurologist :
-                consultdoctor = "Neurologist"
-            
-            elif final_prediction in Allergist_Immunologist :
-                consultdoctor = "Allergist/Immunologist"
-            
-            elif final_prediction in Urologist :
-                consultdoctor = "Urologist"
-            
-            elif final_prediction in Dermatologist :
-                consultdoctor = "Dermatologist"
-            
-            elif final_prediction in Gastroenterologist :
-                consultdoctor = "Gastroenterologist"
-            
-            else :
-                consultdoctor = "other"
+                Rheumatologist = [ ]
         
-            return final_prediction,consultdoctor
+                Cardiologist = [ 'Heart attack','Bronchial Asthma','Hypertension ']
+                
+                ENT_specialist = ['(vertigo) Paroymsal  Positional Vertigo','Hypothyroidism' ]
 
-        else:
-            return "Please select 4 or more symptoms"    
+                Orthopedist = ['Osteoarthristis','Arthritis','Cervical spondylosis']
+
+                Neurologist = ['Varicose veins','Paralysis (brain hemorrhage)','Migraine']
+
+                Allergist_Immunologist = ['Allergy','Pneumonia',
+                    'AIDS','Common Cold','Tuberculosis','Malaria','Dengue','Typhoid']
+
+                Urologist = [ 'Urinary tract infection',
+                    'Dimorphic hemmorhoids(piles)']
+
+                Dermatologist = [  'Acne','Chicken pox','Fungal infection','Psoriasis','Impetigo']
+
+                Gastroenterologist = ['Peptic ulcer diseae', 'GERD','Chronic cholestasis','Drug Reaction','Gastroenteritis','Hepatitis E',
+                    'Alcoholic hepatitis','Jaundice','hepatitis A',
+                    'Hepatitis B', 'Hepatitis C', 'Hepatitis D','Diabetes ','Hypoglycemia']
+                    
+                if final_prediction in Rheumatologist :
+                    consultdoctor = "Rheumatologist"
+                    
+                if final_prediction in Cardiologist :
+                    consultdoctor = "Cardiologist"
+                    
+
+                elif final_prediction in ENT_specialist :
+                    consultdoctor = "ENT specialist"
+                
+                elif final_prediction in Orthopedist :
+                    consultdoctor = "Orthopedist"
+                
+                elif final_prediction in Neurologist :
+                    consultdoctor = "Neurologist"
+                
+                elif final_prediction in Allergist_Immunologist :
+                    consultdoctor = "Allergist/Immunologist"
+                
+                elif final_prediction in Urologist :
+                    consultdoctor = "Urologist"
+                
+                elif final_prediction in Dermatologist :
+                    consultdoctor = "Dermatologist"
+                
+                elif final_prediction in Gastroenterologist :
+                    consultdoctor = "Gastroenterologist"
+                
+                else :
+                    consultdoctor = "other"
+            
+                return final_prediction,consultdoctor
+
+            else:
+                 return "Please select 4 or more symptoms"    
     
     
 
@@ -635,7 +595,7 @@ def result(request):
     
     #pred=[NaiveBayes(symptoms_list),KNN(symptoms_list),randomforest(symptoms_list),DecisionTree(symptoms_list)]
     prediction,consult=predictDisease(symptoms_list)
-
+    #print(predictDisease(symptoms_list))
     #print("this is prediction",prediction)
 
     

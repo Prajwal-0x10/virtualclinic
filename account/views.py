@@ -52,6 +52,15 @@ def pateint_register(request):
             address=form.cleaned_data['address']
             gender=form.cleaned_data['gender']
             blood_group=form.cleaned_data['blood_group']
+            phone = form.cleaned_data['phone']
+            email = form.cleaned_data['email']
+            phon = str(phone)
+            if not len(phon)  == 10:
+                messages.success(request,'Phone number must be 10 digit')
+                return redirect('account:pateint_register')
+
+
+
             
 
             print(age, address, gender, blood_group,user)
@@ -60,6 +69,8 @@ def pateint_register(request):
                             address=address,
                             gender=gender,
                             blood_group=blood_group,
+                            phone= phon ,
+                            email = email ,
                             )
             #form.save()
             messages.success(request,'Your Account Created Succesfully')

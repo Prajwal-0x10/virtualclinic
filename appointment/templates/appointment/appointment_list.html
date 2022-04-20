@@ -38,7 +38,7 @@
                 <td>{{obj.appointment_time|time:'g:i a'  }}</td>
                 <td>{{ obj.doctor }}</td>
                 <td>{{ obj.patient }}</td>
-                <td><a class="btn btn-primary" href="{% url 'appointment:delete_appointment' obj.id %}" role="button">Cancle Appointment</a></td>
+                <td><a class="btn btn-primary" href="{% url 'appointment:delete_appointment' obj.id %}" role="button">Cancel Appointment</a></td>
                 
             </tr>
             {% endfor %}

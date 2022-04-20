@@ -1,0 +1,14 @@
+
+{% if status == "YES" %}
+<div class="row mb-3">
+    <label for="inputEnterYourName" class="col-sm-3 col-form-label">Doctors</label>
+    <div class="col-sm-9">
+        <select class="form-select" id="YES_NO" name="selected_doc">
+            {% for doc in doctors %}
+                <option value="{{doc.id}}">{{doc.user.username}}</option>
+            {% endfor %}
+        </select>	
+    </div>
+</div>
+
+{% endif %}

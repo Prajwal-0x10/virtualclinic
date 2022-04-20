@@ -56,6 +56,8 @@ class PatientSignUpForm(UserCreationForm):
     age=forms.IntegerField()
     gender=forms.ChoiceField(choices = GENDER_CHOICES)
     blood_group=forms.ChoiceField(choices = BLOOD_GROUPS)
+    phone = forms.IntegerField()
+    email = forms.EmailField(max_length=100)
     class Meta(UserCreationForm.Meta):
         model = User
     @transaction.atomic

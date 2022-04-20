@@ -3,7 +3,7 @@
 {% load bootstrap5 %}
 
 {% block content %}
-
+{% load widget_tweaks %}
 
 
 
@@ -12,7 +12,7 @@
 		margin-top:100px;
 		font-size: 14px;
 	}
-	#id_department,#box{
+	#id_department,#box,#YES_NO{
     width: 100%;
     margin:.7rem 0;
     border-radius: .5rem;
@@ -55,8 +55,32 @@ label {
                                     <div class="row mb-3">
 										<label for="inputEnterYourName" class="col-sm-3 col-form-label">Department</label>
 										<div class="col-sm-9">
-											{{form.department}}
+										 
+										  {% render_field form.department hx-get='/session_doctor/' hx-target='#error' hx-trigger="change" %}
 										</div>
+	
+									</div>
+									<div id="error">
+											
+									</div>
+									<div class="row mb-3">
+										<label for="inputEnterYourName" class="col-sm-3 col-form-label">Selected Doctor</label>
+										<div class="col-sm-9">
+											<select class="form-select" id="YES_NO"
+											
+											name="selected_doctor" 
+											hx-get="{% url 'appointment:get-doctors' %}"
+											hx-trigger="change"
+											hx-target="#doctors">
+												<option> select </option>
+												<option> Yes </option>
+												<option> No </option>
+											</select>	
+										</div>
+									</div>
+
+									<div id="doctors">
+										{% include 'appointment/partials/perm.html' %}
 									</div>
 									
 									<div class="row mb-3">

@@ -27,6 +27,8 @@ class PatientProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1, blank=True)
     age = models.IntegerField(blank=True, null=True)
+    phone = models.CharField(max_length=10,null=False)
+    email = models.CharField(max_length=100,)
     address = models.CharField(max_length=500, blank=True,null=True)
     blood_group = models.CharField(choices=BLOOD_GROUPS, max_length=3, blank=True)
     # symptom = models.CharField(max_length=200,default="routine checkup")
@@ -54,7 +56,7 @@ departments=[('Cardiologist','Cardiologist'),
 class DoctorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1, blank=True)
-    mobile = models.CharField(max_length=20,null=True)
+    mobile = models.CharField(max_length=10,null=False)
     department= models.CharField(max_length=50,choices=departments,default='Cardiologist')
     
     shift_start_time    =models.TimeField(default=timezone.now,null=True)
